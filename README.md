@@ -1,68 +1,40 @@
 # vertex-parse-yaml-mark
 
-`vertex-parse-yaml-mark` treats parsers as a local verification problem. The Ruby implementation is intentionally narrow, but the fixtures and notes make the behavior explicit.
+`vertex-parse-yaml-mark` is a Ruby project in parsers. Its focus is to implement a Ruby parsers project for yaml graph analysis, using node-edge fixtures and cycle and reachability reports.
 
-## Vertex Parse YAML Mark Checkpoints
+## Why I Keep It Small
 
-Treat the compact fixture as the contract and the extended examples as a scratchpad. The code should stay boring enough that a change in behavior is obvious from the test output.
+This is intentionally local and self-contained so it can be inspected without credentials, services, or seeded history.
 
-## Architecture Notes
+## Vertex Parse YAML Mark Review Notes
 
-The project is organized around a compact model rather than a large framework. Inputs are scored, classified, and checked against golden fixtures. The constants live in code and are mirrored in metadata so documentation drift is easy to catch. The Ruby code keeps the module small and leans on Minitest for direct fixture checks.
+Start with `token drift` and `label quality`. Those cases create the widest score spread in this repo, so they are the best quick check when the model changes.
 
-## What This Is For
+## Included Behavior
 
-I use this kind of project to make a rule visible before adding more machinery around it. The important part here is not the size of the codebase. It is that the input signals, scoring rule, fixture data, and expected output can all be checked in one sitting.
+- `fixtures/domain_review.csv` adds cases for token drift and grammar width.
+- `metadata/domain-review.json` records the same cases in structured form.
+- `config/review-profile.json` captures the read order and the two review questions.
+- `examples/vertex-parse-yaml-walkthrough.md` walks through the case spread.
+- The Ruby code includes a review path for `token drift` and `label quality`.
+- `docs/field-notes.md` explains the strongest and weakest cases.
 
-## Useful Pieces
+## Internal Model
 
-- Uses fixture data to keep error labels changes visible in code review.
-- Includes extended examples for grammar boundaries, including `surge` and `degraded`.
-- Documents golden examples tradeoffs in `docs/operations.md`.
-- Runs locally with a single verification command and no external credentials.
-- Stores project constants and verification metadata in `metadata/project.json`.
+The implementation keeps the scoring rule plain: reward signal and confidence, preserve slack, penalize drag, then classify the result into a review lane.
 
-## Case Study
+The Ruby code keeps the review rule close to the tests.
 
-The examples are meant to be readable before they are exhaustive. They cover enough variation to show how latency and risk can pull a decision below the threshold.
-
-## Project Layout
-
-- `lib`: library code
-- `tests`: verification harness
-- `fixtures`: compact golden scenarios
-- `examples`: expanded scenario set
-- `metadata`: project constants and verification metadata
-- `docs`: operations and extension notes
-- `scripts`: local verification and audit commands
-
-## Tooling
-
-The only required setup is the local Ruby toolchain. After cloning, stay in the repo root so fixture paths resolve correctly.
-
-## Local Workflow
+## Try It Locally
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/verify.ps1
 ```
 
-This runs the language-level build or test path against the compact fixture set.
+## Validation
 
-## Quality Gate
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/audit.ps1
-```
-
-The audit command checks repository structure and README constraints before it delegates to the verifier.
+That command is also the regression path. It verifies the domain cases and catches mismatches between the CSV, metadata, and code.
 
 ## Scope
 
-The examples cover useful edges, not every edge. A larger version would add malformed-input tests, richer reports, and deeper domain parsers.
-
-## Expansion Ideas
-
-- Add a loader for `examples/extended_cases.csv` and promote selected cases into the language test suite.
-- Add a short report command that prints the score breakdown for a single scenario.
-- Add malformed input fixtures so the failure path is as visible as the happy path.
-- Add one more parsers fixture that focuses on a malformed or borderline input.
+The fixture set is small enough to audit by hand. The next useful expansion is malformed input coverage, not extra surface area.
