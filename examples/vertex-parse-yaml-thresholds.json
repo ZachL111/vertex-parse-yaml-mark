@@ -1,0 +1,17 @@
+{
+  "repo": "vertex-parse-yaml-mark",
+  "thresholds": {
+    "signal": 4,
+    "slack": 1,
+    "confidence": 1,
+    "drag": 4,
+    "ship": 156,
+    "watch": 98
+  },
+  "terms": [
+    "token drift",
+    "grammar width",
+    "label quality",
+    "error locality"
+  ]
+}
